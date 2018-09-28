@@ -1,4 +1,5 @@
 require_relative '00_tree_node'
+require 'byebug'
 
 MOVES = [
   [1, 2],
@@ -12,17 +13,60 @@ MOVES = [
 ]
 
 class KnightPathFinder
+  attr_accessor :root_node, :visited_pos
 
-  def self.root_node
+  def self.corner_start
     first_move = PolyTreeNode.new([0, 0])
     self.new(first_move)
   end
 
-  def initialize(start_pos = KnightPathFinder.root_node)
-    @start_pos = start_pos
+  def self.valid_moves(pos)
+    self.all_moves(pos).select {|move| self.valid?(move)}
   end
 
-  def valid_move?(move)
+  # private
+  def self.valid?(pos)
+    pos.all? { |coordinate| coordinate.between?(0, 7) }
+  end
+
+  def self.all_moves(pos)
+    MOVES.map do |coordinate|
+      x = coordinate.first + pos.first
+      y = coordinate.last + pos.last
+      [x, y]
+    end
+  end
+
+  def initialize(root_node = KnightPathFinder.corner_start)
+    @root_node = root_node
+    @visited_pos = []
+  end
+
+  def build_move_tree
+    queue = [self.root_node]
+    until queue.empty?
+      current_node = queue.first
+      self.visited_pos << current_node
+      next_positions = KnightPathFinder.valid_moves(current_node.value)
+      next_positions.each do |pos|
+        next_node = PolyTreeNode.new(pos)
+        current_node.add_child(next_node)
+        queue << next_node unless self.visited_pos.include?(next_node)
+      end
+      queue.shift
+    end
+    self.root_node
+  end
+
+  def find_path(end_pos)
     
   end
+
+  def trace_path_back
+
+  end
+
 end
+
+k = KnightPathFinder.corner_start
+p k.build_move_tree

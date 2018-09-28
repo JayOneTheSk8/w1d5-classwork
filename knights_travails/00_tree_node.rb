@@ -55,4 +55,8 @@ class PolyTreeNode
     end
     nil
   end
+
+  def ==(other_node)
+    self.value == other_node.value
+  end
 end
