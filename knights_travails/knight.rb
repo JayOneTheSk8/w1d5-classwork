@@ -59,7 +59,9 @@ class KnightPathFinder
   end
 
   def find_path(end_pos)
-    
+    build_move_tree
+    search = self.root_node.dfs(end_pos)
+    search.nil? ? nil : search.value
   end
 
   def trace_path_back
