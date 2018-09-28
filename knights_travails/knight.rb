@@ -60,12 +60,18 @@ class KnightPathFinder
 
   def find_path(end_pos)
     build_move_tree
-    search = self.root_node.dfs(end_pos)
-    search.nil? ? nil : search.value
+    search = self.root_node.bfs(end_pos)
+    search.nil? ? nil : trace_path_back(search)
   end
 
-  def trace_path_back
-
+  def trace_path_back(end_node)
+    path = []
+    current_parent = end_node
+    until current_parent.nil?
+      path.unshift(current_parent.value)
+      current_parent = current_parent.parent
+    end
+    path
   end
 
 end
